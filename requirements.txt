@@ -1,0 +1,10 @@
+setuptools
+pyrogram
+asyncio
+aiohttp
+tgcrypto
+requests
+pytz
+colorama
+rich
+python-dotenv
