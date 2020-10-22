@@ -1,6 +1,7 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
 from pyrogram import Client, __version__
+from pyrogram.errors import ApiIdInvalid, AccessTokenInvalid
 import os, sys
 from dotenv import load_dotenv
 from rich.console import Console
@@ -25,6 +26,10 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
               Birden fazla özellik buna bağlıdır. Bot kapatılıyor.""")
     quit(1)
 
+if not os.path.exists('ayar.env'):
+    hata("\n\tLütfen ayar.env dosyanızı oluşturun..\n")
+    quit(1)
+
 load_dotenv("ayar.env")
 
 # Yapılandırmanın önceden kullanılan değişkeni kullanarak düzenlenip düzenlenmediğini kontrol edin.
@@ -32,7 +37,7 @@ load_dotenv("ayar.env")
 AYAR_KONTROL = os.environ.get("___________LUTFEN_______BU_____SATIRI_____SILIN__________", None)
 
 if AYAR_KONTROL:
-    hata("\n\tLütfen ilk hashtag'de belirtilen satırı ayar.env dosyasından kaldırın\n")
+    hata("\n\tLütfen ayar.env dosyanızı düzenlediğinize emin olun /veya\n\tilk hashtag'de belirtilen satırı kaldırın..\n")
     quit(1)
 
 API_ID          = os.environ.get("API_ID", None)
@@ -53,7 +58,7 @@ try:
         plugins         = dict(root="Robot/Eklentiler")
     )
 except ValueError:
-    hata("\n\tLütfen ayar.env dosyanızı oluşturun..\n")
+    hata("\n\tLütfen ayar.env dosyanızı DÜZGÜNCE! oluşturun..\n")
     quit(1)
 
 DESTEK_KOMUT = {}
@@ -65,7 +70,14 @@ for dosya in os.listdir("./Robot/Eklentiler/"):
     tum_eklentiler.append(f"📂 {dosya.replace('.py','')}")
 
 def baslangic():
-    kekikRobot.start()
+    try:
+        kekikRobot.start()
+    except ApiIdInvalid:
+        hata('\n\tayar.env dosyasındaki API Bilgileri Geçersiz..\n')
+        quit(1)
+    except AccessTokenInvalid:
+        hata('\n\tBot Token Geçersiz..\n')
+        quit(1)
 
     surum = f"{str(sys.version_info[0])}.{str(sys.version_info[1])}"
     konsol.print(f"\t\t[gold1]@{SESSION_ADI}[/] [yellow]:bird:[/] [bold red]Python: [/][i]{surum}[/]")
