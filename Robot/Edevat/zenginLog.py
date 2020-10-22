@@ -1,7 +1,7 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
 import datetime, pytz
-from Robot import LOG_ID, SESSION_ADI, log_ver
+from Robot import LOG_ID, SESSION_ADI, log_ver, hata
 from pyrogram import Client
 from pyrogram.types import Message
 
@@ -36,7 +36,12 @@ async def log_yolla(client:Client, message:Message):
     log_dosya   += f"\t| {message.chat.type}\n"
 
     log_ver(f"{log_konsol}")                             # zenginKonsol'a log gönder
-    await client.send_message(int(LOG_ID), log_mesaj)    # log_id'ye log gönder
+    try:
+        await client.send_message(int(LOG_ID), log_mesaj)    # log_id'ye log gönder
+    except ValueError:
+        hata("\n\tLOG ID Geçersiz..\n")
+        await message.reply('`LOG ID geçersiz olduğu için bot kapatıldı!`')
+        quit(1)
 
     with open(f"@{SESSION_ADI}.log", "a+") as log_yaz:   # dosyaya log yaz
         log_yaz.write(log_dosya)
