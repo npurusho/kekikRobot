@@ -1,6 +1,7 @@
 # Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
 
 from pyrogram import Client, __version__
+from konsolTaban._evrensel.tanimlar import bellenim_surumu
 from pyrogram.errors import ApiIdInvalid, AccessTokenInvalid
 import os, sys
 from dotenv import load_dotenv
@@ -26,9 +27,9 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
               Birden fazla özellik buna bağlıdır. Bot kapatılıyor.""")
     quit(1)
 
-if not os.path.exists('ayar.env'):
-    hata("\n\tLütfen ayar.env dosyanızı oluşturun..\n")
-    quit(1)
+if (bellenim_surumu.split('-')[-1] != 'aws') and (not os.path.exists("ayar.env")): # Heroku Geçmek için aws
+   hata("\n\tLütfen ayar.env dosyanızı oluşturun..\n")
+   quit(1)
 
 load_dotenv("ayar.env")
 
